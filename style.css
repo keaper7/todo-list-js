@@ -1,0 +1,13 @@
+body { font-family: sans-serif; padding: 40px; transition: background 0.3s; }
+.dark-theme { background-color: #222; color: #fff; }
+button { padding: 10px 20px; margin: 10px 5px; cursor: pointer; font-size: 16px; }
+input { padding: 10px; font-size: 16px; }
+
+.done {
+    text-decoration: line-through;
+    color: gray;
+    opacity: 0.6; /* Сделает задачу слегка прозрачной */
+}
+.task-list > li:hover {
+    cursor: pointer;
+}
