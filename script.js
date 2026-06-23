@@ -75,6 +75,8 @@
 // })
 
 
+let tasks = [];
+
 function AddTask() {
     const tasklist = document.querySelector('.task-list');
     const val = document.querySelector('.todo-input');
@@ -86,6 +88,9 @@ function AddTask() {
         newli.append(deleteBtn);
         tasklist.append(newli);
 
+        tasks.push(val.value);
+        saveToStorage()
+
         newli.addEventListener('click', () => {
             newli.classList.toggle('done');
         })
@@ -94,8 +99,15 @@ function AddTask() {
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             newli.remove();
+
+            tasks = tasks.filter(now => now !== newli.firstChild.textContent);
+            saveToStorage();
         })
     }
+}
+
+function saveToStorage() {
+    localStorage.setItem('todo_tasks', JSON.stringify(tasks));
 }
 
 
@@ -106,8 +118,10 @@ const delall = document.querySelector('.clear-completed-btn');
 delall.addEventListener('click', () => {
     const completed = document.querySelectorAll('.task-list li.done');
     completed.forEach(now => {
+        tasks = tasks.filter(nn => nn !== now.firstChild.textContent);
         now.remove();
     })
+    saveToStorage();
 })
 
 const inputent = document.querySelector('.todo-input');
@@ -116,3 +130,32 @@ inputent.addEventListener('keydown', (e) => {
         AddTask();
     }
 })
+
+
+const savedTasks = localStorage.getItem('todo_tasks');
+if (savedTasks) {
+    tasks = JSON.parse(savedTasks);
+    tasks.forEach(tasktext => {
+        const newli = document.createElement('li');
+        newli.textContent = tasktext;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '❌';
+
+        newli.append(deleteBtn);
+        document.querySelector('.task-list').append(newli);
+
+
+        newli.addEventListener('click', () => {
+            newli.classList.toggle('done');
+        });
+
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            newli.remove();
+
+            tasks = tasks.filter(now => now !== newli.firstChild.textContent);
+            saveToStorage();
+        });
+    })
+}
